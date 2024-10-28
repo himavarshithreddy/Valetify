@@ -1,9 +1,6 @@
-const dotenv = require('dotenv');
-dotenv.config();
-
 const MongoDBConfig = {
-  username: process.env.MONGODB_USERNAME || 'default_username',
-  password: process.env.MONGODB_PASSWORD || 'default_password',
+  username: process.env.REACT_APP_MONGODB_USERNAME || 'default_username',
+  password: process.env.REACT_APP_MONGODB_PASSWORD || 'default_password',
   cluster: 'smartvalet.0br3z.mongodb.net',
   dbName: 'smartvalet',
   serverUrl: 'smartvalet.vercel.app',
