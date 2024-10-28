@@ -126,7 +126,47 @@ app.post('/api/request-vehicle/:shortCode', async (req, res) => {
     res.status(500).json({ message: 'Error requesting the vehicle', error: error.message });
   }
 });
-
+// Add this route to check for existing car number or keyId
+app.post('/api/cars/check', async (req, res) => {
+    const { carNumber, keyId } = req.body;
+  
+    try {
+      const existingCar = await Car.findOne({ carNumber });
+      const existingKeyId = await Car.findOne({ keyId });
+  
+      if (existingCar) {
+        return res.status(400).json({ message: 'Car number already exists' });
+      }
+  
+      if (existingKeyId) {
+        return res.status(400).json({ message: 'Key ID already exists' });
+      }
+  
+      res.json({ message: 'Car number and Key ID are available' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error checking car number or Key ID', error: error.message });
+    }
+  });
+  
+  // Update the POST route for adding a car
+  app.post('/api/cars', async (req, res) => {
+    const { carNumber, carBrand, keyId, phoneNumber } = req.body;
+  
+    const newCar = new Car({
+      carNumber,
+      carBrand,
+      keyId,
+      phoneNumber,
+    });
+  
+    try {
+      await newCar.save();
+      res.status(201).json(newCar);
+    } catch (error) {
+      res.status(500).json({ message: 'Error adding car to the database', error: error.message });
+    }
+  });
+  
 // Route to serve the request vehicle page
 app.get('/request', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'request_vehicle.html'));
